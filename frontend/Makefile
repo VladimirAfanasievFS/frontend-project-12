@@ -2,7 +2,7 @@ install:
 	npm ci
 
 start:
-	npm start
+	DISABLE_ESLINT_PLUGIN=true npm start
 
 build:
 	npm build
