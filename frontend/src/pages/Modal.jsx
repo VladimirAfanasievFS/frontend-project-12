@@ -1,24 +1,29 @@
 import { useEffect, useRef, useState } from 'react';
 import { Button, Modal as BootstrapModal, Form, FormGroup, FormControl } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { switchModal } from '../slices/modal';
+import { hideModal } from '../slices/modal';
 import { useFormik } from 'formik';
+import { socket } from '../socket';
+import * as Yup from 'yup';
+import { removeChannel } from '../slices/channels';
 
 export const TYPE = { ADD: 'add', REMOVE: 'remove', RENAME: 'rename' };
 
-const AddChannelModal = () => {
-  const dispatch = useDispatch();
-
-  const handleHide = () => {
-    // dispatch(actions.hideModal());
-  };
+const AddChannelModal = ({ handleClose }) => {
+  const { currentChannelId, channels } = useSelector(state => state.channels);
 
   const f = useFormik({
     onSubmit: async values => {
       try {
+        socket.emit('newChannel', { name: values.body }, ({ status }) => {
+          if (status === 'ok') {
+            handleClose();
+          } else {
+            console.warn('newChannel EROROROR');
+          }
+        });
         // const resultAction = await dispatch(asyncActions.postChannel({ name: `${values.body}` }));
         // unwrapResult(resultAction);
-        handleHide();
       } catch ({ message }) {
         // dispatch(
         //   actions.showModal({
@@ -30,9 +35,13 @@ const AddChannelModal = () => {
     },
     initialValues: { body: '' },
     initialErrors: { body: 'Required' },
-    // validationSchema: Yup.object().shape({
-    //   body: Yup.string().min(3, 'Too Short!').max(10, 'Too Long!').required('Required!'),
-    // }),
+    validationSchema: Yup.object().shape({
+      body: Yup.string()
+        .min(3, 'Too Short!')
+        .max(10, 'Too Long!')
+        .notOneOf(channels.map(({ name }) => name))
+        .required('Required!'),
+    }),
   });
 
   const inputRef = useRef();
@@ -66,9 +75,9 @@ const AddChannelModal = () => {
     </>
   );
 };
-const RemoveChannelModal = () => {
+const RemoveChannelModal = ({ handleClose }) => {
   const dispatch = useDispatch();
-  // const { id } = useSelector(modalProps);
+  const { id } = useSelector(state => state.modal.payload);
   // const handleHide = () => {
   //   dispatch(actions.hideModal());
   // };
@@ -76,9 +85,14 @@ const RemoveChannelModal = () => {
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      // const resultAction = await dispatch(asyncActions.removeChannel({ channelId: id }));
-      // unwrapResult(resultAction);
-      // handleHide();
+      socket.emit('removeChannel', { id }, ({ status }) => {
+        if (status === 'ok') {
+          handleClose();
+        } else {
+          console.warn('removeChannel EROROROR');
+        }
+      });
+
     } catch ({ message }) {
       // dispatch(
       //   actions.showModal({
@@ -91,16 +105,16 @@ const RemoveChannelModal = () => {
 
   return (
     <>
-      <Modal.Header closeButton>
-        <Modal.Title>Remove channel</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
+      <BootstrapModal.Header closeButton>
+        <BootstrapModal.Title>Remove channel</BootstrapModal.Title>
+      </BootstrapModal.Header>
+      <BootstrapModal.Body>
         <Form onSubmit={handleSubmit}>
           <Button type="submit" className="btn btn-primary">
             Confirm remove channel
           </Button>
         </Form>
-      </Modal.Body>
+      </BootstrapModal.Body>
     </>
   );
 };
@@ -181,13 +195,13 @@ const Modal = () => {
   }));
 
   const handleClose = () => {
-    dispatch(switchModal({ isVisible: false }));
+    dispatch(hideModal());
   };
 
   const ModalComponent = modalsType[type];
   return (
     <BootstrapModal show={isVisible} onHide={handleClose}>
-      {ModalComponent && <ModalComponent />}
+      {ModalComponent && <ModalComponent handleClose={handleClose} />}
     </BootstrapModal>
   );
 };

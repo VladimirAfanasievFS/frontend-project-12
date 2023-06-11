@@ -3,32 +3,46 @@ import SocketContext from '../contexts/SocketContext';
 import { socket } from '../socket';
 import { useDispatch } from 'react-redux';
 import { addMessage } from '../slices/messages';
+import { addChannel, changeChannel, removeChannel } from '../slices/channels';
 
 const SocketProvider = ({ children }) => {
   const [isConnected, setIsConnected] = useState(socket.connected);
   // const [fooEvents, setFooEvents] = useState([]);
   const dispatch = useDispatch();
   useEffect(() => {
-    function onConnect() {
+    const onConnect = () => {
       setIsConnected(true);
-    }
+    };
 
-    function onDisconnect() {
+    const onDisconnect = () => {
       setIsConnected(false);
-    }
+    };
 
-    function onNewMessage(message) {
+    const onNewMessage = message => {
       dispatch(addMessage({ message }));
-    }
+    };
+
+    const onNewChannel = channel => {
+      dispatch(addChannel({ channel }));
+      dispatch(changeChannel({ channelId: channel.id }));
+    };
+
+    const onRemoveChannel = channel => {
+      dispatch(removeChannel({ channelId: channel.id }));
+      dispatch(changeChannel({ channelId: 1 }));
+    };
 
     socket.on('connect', onConnect);
     socket.on('disconnect', onDisconnect);
     socket.on('newMessage', onNewMessage);
-
+    socket.on('newChannel', onNewChannel);
+    socket.on('removeChannel', onRemoveChannel);
     return () => {
       socket.off('connect', onConnect);
       socket.off('disconnect', onDisconnect);
       socket.off('newMessage', onNewMessage);
+      socket.off('newChannel', onNewChannel);
+      socket.off('removeChannel', onRemoveChannel);
     };
   }, [dispatch]);
 

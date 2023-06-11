@@ -1,5 +1,3 @@
-// @ts-check
-
 import React, { useEffect } from 'react';
 
 import NewMessageForm from './NewMessageForm.jsx';
@@ -14,7 +12,12 @@ const Message = ({ username, body }) => (
 );
 
 const ChatBox = () => {
-  const messages = useSelector(state => state.messages.messages);
+  const messages = useSelector(state =>
+    state.messages.messages.filter(message => {
+      return message.channelId === state.channels.currentChannelId;
+    }),
+  );
+  console.log('🚀 ~ file: ChatBox.jsx:20 ~ ChatBox ~ messages:', messages);
   //cкролл вниз react-scroll
   return (
     <div className="d-flex flex-column h-100">

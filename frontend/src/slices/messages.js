@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { setInitialState } from './channels';
+import { removeChannel, setInitialState } from './channels';
+import remove from 'lodash/remove';
 
 const initialState = { messages: [] };
 
@@ -12,10 +13,14 @@ const messagesSlice = createSlice({
     },
   },
   extraReducers: builder => {
-    builder.addCase(setInitialState, (state, { payload }) => {
-      const { messages } = payload;
-      state.messages = messages;
-    });
+    builder
+      .addCase(setInitialState, (state, { payload }) => {
+        const { messages } = payload;
+        state.messages = messages;
+      })
+      .addCase(removeChannel, (state, { payload }) => {
+        remove(state.messages, ({ channelId }) => channelId === payload.channelId);
+      });
   },
 });
 
