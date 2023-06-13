@@ -6,6 +6,7 @@ import * as Yup from 'yup';
 import { loginPath } from '../routes';
 import useAuth from '../hooks/useAuth';
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const LoginSchema = Yup.object().shape({
   username: Yup.string().required('Required'),
@@ -17,7 +18,7 @@ const LoginForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const inputRef = useRef();
-
+  const { t } = useTranslation();
   const f = useFormik({
     initialValues: {
       username: '',
@@ -56,10 +57,10 @@ const LoginForm = () => {
         <div className="col-lg-4 col-md-6 col-sm-8">
           <div className="card">
             <div className="card-body">
-              <h1 className="card-title text-center mb-4">Login</h1>
+              <h1 className="card-title text-center mb-4">{t('login.header')}</h1>
               <Form onSubmit={f.handleSubmit}>
                 <Form.Group controlId="username">
-                  <Form.Label>Username</Form.Label>
+                  <Form.Label>{t('login.username')}</Form.Label>
                   <Form.Control
                     type="text"
                     name="username"
@@ -76,7 +77,7 @@ const LoginForm = () => {
                 </Form.Group>
 
                 <Form.Group controlId="password">
-                  <Form.Label>Password</Form.Label>
+                  <Form.Label>{t('login.password')}</Form.Label>
                   <Form.Control
                     type="password"
                     name="password"
@@ -92,9 +93,9 @@ const LoginForm = () => {
 
                 <div className="d-flex justify-content-between align-items-center">
                   <Button variant="primary" type="submit" disabled={f.isSubmitting}>
-                    Submit
+                    {t('login.submit')}
                   </Button>
-                  <Link to="/registration">Регистрация</Link>
+                  <Link to="/registration"> {t('login.signup')}</Link>
                 </div>
               </Form>
             </div>

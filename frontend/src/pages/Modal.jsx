@@ -6,11 +6,13 @@ import { useFormik } from 'formik';
 import { socket } from '../socket';
 import * as Yup from 'yup';
 import find from 'lodash/find';
+import { useTranslation } from 'react-i18next';
 
 export const TYPE = { ADD: 'add', REMOVE: 'remove', RENAME: 'rename' };
 
 const AddChannelModal = ({ handleClose }) => {
   const { channels } = useSelector(state => state.channels);
+  const { t } = useTranslation();
 
   const f = useFormik({
     onSubmit: async values => {
@@ -19,6 +21,7 @@ const AddChannelModal = ({ handleClose }) => {
           handleClose();
         } else {
           console.warn('newChannel EROROROR');
+          f.setSubmitting(false);
         }
       });
     },
@@ -33,18 +36,16 @@ const AddChannelModal = ({ handleClose }) => {
     validateOnBlur: false,
     validateOnChange: false,
   });
-  console.log('🚀 ~ file: Modal.jsx:35 ~ AddChannelModal ~ f:', f);
 
   const inputRef = useRef();
   useEffect(() => {
     inputRef.current.focus();
-    // f.setFieldError('body', false);
   }, []);
 
   return (
     <>
       <BootstrapModal.Header closeButton>
-        <BootstrapModal.Title>Add new channel</BootstrapModal.Title>
+        <BootstrapModal.Title>{t('modals.add')}</BootstrapModal.Title>
       </BootstrapModal.Header>
       <BootstrapModal.Body>
         <Form onSubmit={f.handleSubmit}>
@@ -59,8 +60,8 @@ const AddChannelModal = ({ handleClose }) => {
             />
             <Form.Control.Feedback type="invalid">{f.errors.body}</Form.Control.Feedback>
           </FormGroup>
-          <Button disabled={f.errors.body} type="submit" className="btn btn-primary">
-            Confirm add channel
+          <Button type="submit" className="btn btn-primary">
+            {t('modals.submit')}
           </Button>
         </Form>
       </BootstrapModal.Body>
@@ -69,6 +70,7 @@ const AddChannelModal = ({ handleClose }) => {
 };
 const RemoveChannelModal = ({ handleClose }) => {
   const { id } = useSelector(state => state.modal.payload);
+  const { t } = useTranslation();
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -85,12 +87,13 @@ const RemoveChannelModal = ({ handleClose }) => {
   return (
     <>
       <BootstrapModal.Header closeButton>
-        <BootstrapModal.Title>Remove channel</BootstrapModal.Title>
+        <BootstrapModal.Title>{t('modals.remove')}</BootstrapModal.Title>
       </BootstrapModal.Header>
       <BootstrapModal.Body>
         <Form onSubmit={handleSubmit}>
+          <div>{t('modals.confirmation')}</div>
           <Button type="submit" className="btn btn-primary">
-            Confirm remove channel
+            {t('modals.confirm')}
           </Button>
         </Form>
       </BootstrapModal.Body>
@@ -101,6 +104,7 @@ const RemoveChannelModal = ({ handleClose }) => {
 const RenameChannelModal = ({ handleClose }) => {
   const { id } = useSelector(state => state.modal.payload);
   const channels = useSelector(state => state.channels.channels);
+  const { t } = useTranslation();
 
   const channel = find(channels, channel => channel.id === id);
 
@@ -134,7 +138,7 @@ const RenameChannelModal = ({ handleClose }) => {
   return (
     <>
       <BootstrapModal.Header closeButton>
-        <BootstrapModal.Title>Rename channel</BootstrapModal.Title>
+        <BootstrapModal.Title>{t('modals.rename')}</BootstrapModal.Title>
       </BootstrapModal.Header>
       <BootstrapModal.Body>
         <Form onSubmit={f.handleSubmit}>
@@ -150,7 +154,7 @@ const RenameChannelModal = ({ handleClose }) => {
             <Form.Control.Feedback type="invalid">{f.errors.body}</Form.Control.Feedback>
           </FormGroup>
           <Button type="submit" className="btn btn-primary">
-            Confirm rename channel
+            {t('modals.submit')}
           </Button>
         </Form>
       </BootstrapModal.Body>

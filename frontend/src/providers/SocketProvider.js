@@ -7,7 +7,6 @@ import { addChannel, changeChannel, removeChannel, renameChannel } from '../slic
 
 const SocketProvider = ({ children }) => {
   const [isConnected, setIsConnected] = useState(socket.connected);
-  // const [fooEvents, setFooEvents] = useState([]);
   const dispatch = useDispatch();
   useEffect(() => {
     const onConnect = () => {

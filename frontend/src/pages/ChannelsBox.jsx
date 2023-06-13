@@ -1,14 +1,15 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, Dropdown, ButtonGroup } from 'react-bootstrap';
 import { PlusSquare } from 'react-bootstrap-icons';
-import { socket } from '../socket';
 import { showModal } from '../slices/modal';
 import { TYPE } from './Modal';
 import { changeChannel } from '../slices/channels';
+import { useTranslation } from 'react-i18next';
 
 const Channel = ({ channel, isCurrent, handleChoose, handleRemove, handleRename }) => {
   const variant = isCurrent ? 'primary' : 'light';
+  const { t } = useTranslation();
   return (
     <li key={channel.id} className="nav-item w-100">
       {channel.removable ? (
@@ -24,11 +25,11 @@ const Channel = ({ channel, isCurrent, handleChoose, handleRemove, handleRename 
             {channel.name}
           </Button>
           <Dropdown.Toggle split className="flex-grow-0" variant={variant}>
-            <span className="visually-hidden">{'channels.menu'}</span>
+            <span className="visually-hidden">{t('channels.menu')}</span>
           </Dropdown.Toggle>
           <Dropdown.Menu>
-            <Dropdown.Item onClick={handleRemove}>{'channels.remove'}</Dropdown.Item>
-            <Dropdown.Item onClick={handleRename}>{'channels.rename'}</Dropdown.Item>
+            <Dropdown.Item onClick={handleRemove}>{t('channels.remove')}</Dropdown.Item>
+            <Dropdown.Item onClick={handleRename}>{t('channels.rename')}</Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
       ) : (

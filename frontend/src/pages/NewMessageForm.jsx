@@ -5,10 +5,11 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { socket } from '../socket';
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 
 const NewMessageForm = () => {
   const { currentChannelId } = useSelector(state => state.channels);
-
+  const { t } = useTranslation();
   const validationSchema = yup.object().shape({
     body: yup.string().trim().required('Required'),
   });
@@ -18,11 +19,8 @@ const NewMessageForm = () => {
     validationSchema,
     onSubmit: ({ body }, { resetForm, setSubmitting }) => {
       socket.emit('newMessage', { body, channelId: currentChannelId });
-      // сделать сброс стейста
-      // f.resetForm();
-      // f.resetForm({ body: '' });
-      // resetForm();
-      // setSubmitting(false);
+      resetForm();
+      setSubmitting(false);
       inputRef.current.focus();
     },
     validateOnBlur: false,
@@ -38,16 +36,19 @@ const NewMessageForm = () => {
     <Form noValidate onSubmit={f.handleSubmit} className="py-1 border rounded-2">
       <InputGroup hasValidation={isInvalid}>
         <Form.Control
-          placeholder="Введите сообщение..."
-          name="body"
+          placeholder={t('chat.enterMessage')}
           onChange={f.handleChange}
+          onBlur={f.handleBlur}
+          value={f.values.body}
+          name="body"
+          // aria-label={t('chat.newMessage')}
+          disabled={f.isSubmitting}
           className="border-0 p-0 ps-2"
           ref={inputRef}
         />
-        {/* <Button variant="group-vertical" type="submit" disabled={isInvalid}> */}
-        <Button variant="group-vertical" type="submit">
+        <Button variant="group-vertical" type="submit" disabled={isInvalid}>
           <ArrowRightSquare size={20} />
-          <span className="visually-hidden">'sent'</span>
+          <span className="visually-hidden">{t('chat.sent')}</span>
         </Button>
       </InputGroup>
     </Form>
