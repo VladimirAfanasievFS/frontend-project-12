@@ -10,6 +10,7 @@ import AuthProvider from './providers/AuthProvider';
 import Navbar from './pages/Navbar';
 import ChatPage from './pages/ChatPage';
 import SocketProvider from './providers/SocketProvider';
+import Registration from './pages/Registration';
 
 const PrivateRoute = () => {
   const auth = useAuth();
@@ -26,6 +27,7 @@ const App = () => {
             <Navbar />
             <Routes>
               <Route path="login" element={<Login />} />
+              <Route path="registration" element={<Registration />} />
               <Route path="" element={<PrivateRoute />}>
                 <Route path="/" element={<ChatPage />} />
                 <Route path="*" element={<Error />} />

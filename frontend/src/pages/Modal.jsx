@@ -5,36 +5,24 @@ import { hideModal } from '../slices/modal';
 import { useFormik } from 'formik';
 import { socket } from '../socket';
 import * as Yup from 'yup';
-import { removeChannel } from '../slices/channels';
+import find from 'lodash/find';
 
 export const TYPE = { ADD: 'add', REMOVE: 'remove', RENAME: 'rename' };
 
 const AddChannelModal = ({ handleClose }) => {
-  const { currentChannelId, channels } = useSelector(state => state.channels);
+  const { channels } = useSelector(state => state.channels);
 
   const f = useFormik({
     onSubmit: async values => {
-      try {
-        socket.emit('newChannel', { name: values.body }, ({ status }) => {
-          if (status === 'ok') {
-            handleClose();
-          } else {
-            console.warn('newChannel EROROROR');
-          }
-        });
-        // const resultAction = await dispatch(asyncActions.postChannel({ name: `${values.body}` }));
-        // unwrapResult(resultAction);
-      } catch ({ message }) {
-        // dispatch(
-        //   actions.showModal({
-        //     modalType: 'INFO_CHANNEL',
-        //     modalProps: { message },
-        //   }),
-        // );
-      }
+      socket.emit('newChannel', { name: values.body }, ({ status }) => {
+        if (status === 'ok') {
+          handleClose();
+        } else {
+          console.warn('newChannel EROROROR');
+        }
+      });
     },
     initialValues: { body: '' },
-    initialErrors: { body: 'Required' },
     validationSchema: Yup.object().shape({
       body: Yup.string()
         .min(3, 'Too Short!')
@@ -42,11 +30,15 @@ const AddChannelModal = ({ handleClose }) => {
         .notOneOf(channels.map(({ name }) => name))
         .required('Required!'),
     }),
+    validateOnBlur: false,
+    validateOnChange: false,
   });
+  console.log('🚀 ~ file: Modal.jsx:35 ~ AddChannelModal ~ f:', f);
 
   const inputRef = useRef();
   useEffect(() => {
     inputRef.current.focus();
+    // f.setFieldError('body', false);
   }, []);
 
   return (
@@ -56,7 +48,7 @@ const AddChannelModal = ({ handleClose }) => {
       </BootstrapModal.Header>
       <BootstrapModal.Body>
         <Form onSubmit={f.handleSubmit}>
-          <FormGroup>
+          <FormGroup className="mb-2">
             <FormControl
               ref={inputRef}
               onChange={f.handleChange}
@@ -76,31 +68,18 @@ const AddChannelModal = ({ handleClose }) => {
   );
 };
 const RemoveChannelModal = ({ handleClose }) => {
-  const dispatch = useDispatch();
   const { id } = useSelector(state => state.modal.payload);
-  // const handleHide = () => {
-  //   dispatch(actions.hideModal());
-  // };
 
   const handleSubmit = async e => {
     e.preventDefault();
-    try {
-      socket.emit('removeChannel', { id }, ({ status }) => {
-        if (status === 'ok') {
-          handleClose();
-        } else {
-          console.warn('removeChannel EROROROR');
-        }
-      });
 
-    } catch ({ message }) {
-      // dispatch(
-      //   actions.showModal({
-      //     modalType: 'INFO_CHANNEL',
-      //     modalProps: { message },
-      //   }),
-      // );
-    }
+    socket.emit('removeChannel', { id }, ({ status }) => {
+      if (status === 'ok') {
+        handleClose();
+      } else {
+        console.warn('removeChannel EROROROR');
+      }
+    });
   };
 
   return (
@@ -119,34 +98,32 @@ const RemoveChannelModal = ({ handleClose }) => {
   );
 };
 
-const RenameChannelModal = () => {
-  const dispatch = useDispatch();
-  // const { channel } = useSelector(modalProps);
-  // const handleHide = () => {
-  //   dispatch(actions.hideModal());
-  // };
+const RenameChannelModal = ({ handleClose }) => {
+  const { id } = useSelector(state => state.modal.payload);
+  const channels = useSelector(state => state.channels.channels);
+
+  const channel = find(channels, channel => channel.id === id);
 
   const f = useFormik({
     onSubmit: async values => {
-      try {
-        // const resultAction = await dispatch(
-        //   asyncActions.renameChannel({ channelId: channel.id, name: `${values.body}` }),
-        // );
-        // unwrapResult(resultAction);
-        // handleHide();
-      } catch ({ message }) {
-        // dispatch(
-        //   actions.showModal({
-        //     modalType: 'INFO_CHANNEL',
-        //     modalProps: { message },
-        //   }),
-        // );
-      }
+      socket.emit('renameChannel', { id, name: values.body }, ({ status }) => {
+        if (status === 'ok') {
+          handleClose();
+        } else {
+          console.warn('renameChannel EROROROR');
+        }
+      });
     },
-    // initialValues: { body: channel.name },
-    // validationSchema: Yup.object().shape({
-    //   body: Yup.string().min(3, 'Too Short!').max(10, 'Too Long!').required('Required!'),
-    // }),
+    initialValues: { body: channel?.name },
+    validationSchema: Yup.object().shape({
+      body: Yup.string()
+        .min(3, 'Too Short!')
+        .max(10, 'Too Long!')
+        .notOneOf(channels.map(({ name }) => name))
+        .required('Required!'),
+    }),
+    validateOnBlur: false,
+    validateOnChange: false,
   });
 
   const inputRef = useRef();
@@ -156,19 +133,19 @@ const RenameChannelModal = () => {
 
   return (
     <>
-      <Modal.Header closeButton>
-        <Modal.Title>Rename channel</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
+      <BootstrapModal.Header closeButton>
+        <BootstrapModal.Title>Rename channel</BootstrapModal.Title>
+      </BootstrapModal.Header>
+      <BootstrapModal.Body>
         <Form onSubmit={f.handleSubmit}>
-          <FormGroup>
+          <FormGroup className="mb-2">
             <FormControl
               ref={inputRef}
               onChange={f.handleChange}
               onBlur={f.handleBlur}
               value={f.values.body}
               name="body"
-              isInvalid={!!f.errors.body}
+              isInvalid={f.errors.body && f.touched.body}
             />
             <Form.Control.Feedback type="invalid">{f.errors.body}</Form.Control.Feedback>
           </FormGroup>
@@ -176,7 +153,7 @@ const RenameChannelModal = () => {
             Confirm rename channel
           </Button>
         </Form>
-      </Modal.Body>
+      </BootstrapModal.Body>
     </>
   );
 };

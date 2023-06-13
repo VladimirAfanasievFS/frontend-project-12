@@ -17,7 +17,7 @@ const ChatBox = () => {
       return message.channelId === state.channels.currentChannelId;
     }),
   );
-  console.log('🚀 ~ file: ChatBox.jsx:20 ~ ChatBox ~ messages:', messages);
+
   //cкролл вниз react-scroll
   return (
     <div className="d-flex flex-column h-100">

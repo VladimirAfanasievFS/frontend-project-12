@@ -28,11 +28,7 @@ const Channel = ({ channel, isCurrent, handleChoose, handleRemove, handleRename 
           </Dropdown.Toggle>
           <Dropdown.Menu>
             <Dropdown.Item onClick={handleRemove}>{'channels.remove'}</Dropdown.Item>
-            <Dropdown.Item
-            // onClick={handleRename(channel.id)}
-            >
-              {'channels.rename'}
-            </Dropdown.Item>
+            <Dropdown.Item onClick={handleRename}>{'channels.rename'}</Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
       ) : (
@@ -86,12 +82,17 @@ const ChannelsBox = () => {
             dispatch(showModal({ type: TYPE.REMOVE, payload: { id: channel.id } }));
           };
 
+          const handleRename = () => {
+            dispatch(showModal({ type: TYPE.RENAME, payload: { id: channel.id } }));
+          };
+
           return (
             <Channel
               channel={channel}
               isCurrent={currentChannelId === channel.id}
               handleChoose={handleChoose}
               handleRemove={handleRemove}
+              handleRename={handleRename}
             />
           );
         })}
