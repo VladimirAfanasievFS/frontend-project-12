@@ -7,7 +7,8 @@ import { socket } from '../socket';
 import * as Yup from 'yup';
 import find from 'lodash/find';
 import { useTranslation } from 'react-i18next';
-
+import { toast } from 'react-toastify';
+import leoProfanity from 'leo-profanity';
 export const TYPE = { ADD: 'add', REMOVE: 'remove', RENAME: 'rename' };
 
 const AddChannelModal = ({ handleClose }) => {
@@ -16,7 +17,8 @@ const AddChannelModal = ({ handleClose }) => {
 
   const f = useFormik({
     onSubmit: async values => {
-      socket.emit('newChannel', { name: values.body }, ({ status }) => {
+      const filteredName = leoProfanity.clean(values.body);
+      socket.emit('newChannel', { name: filteredName }, ({ status }) => {
         if (status === 'ok') {
           handleClose();
         } else {
@@ -24,6 +26,7 @@ const AddChannelModal = ({ handleClose }) => {
           f.setSubmitting(false);
         }
       });
+      toast.success(t('channels.created'));
     },
     initialValues: { body: '' },
     validationSchema: Yup.object().shape({
@@ -81,6 +84,7 @@ const RemoveChannelModal = ({ handleClose }) => {
       } else {
         console.warn('removeChannel EROROROR');
       }
+      toast.success(t('channels.removed'));
     });
   };
 
@@ -117,6 +121,7 @@ const RenameChannelModal = ({ handleClose }) => {
           console.warn('renameChannel EROROROR');
         }
       });
+      toast.success(t('channels.renamed'));
     },
     initialValues: { body: channel?.name },
     validationSchema: Yup.object().shape({

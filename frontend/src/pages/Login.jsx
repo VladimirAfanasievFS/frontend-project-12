@@ -37,7 +37,6 @@ const LoginForm = () => {
         if (err.isAxiosError && err.response.status === 401) {
           setStatus('userUnknown');
           inputRef.current.select();
-
           return;
         }
         throw err;

@@ -5,9 +5,8 @@ import Spinner from 'react-bootstrap/Spinner';
 import ChannelsBox from './ChannelsBox.jsx';
 import ChatBox from './ChatBox.jsx';
 import { dataPath } from '../routes.js';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setInitialState } from '../slices/channels.js';
-import Modal from './Modal.jsx';
 
 const ChatPage = () => {
   const [fetching, setFetching] = useState(true);
@@ -33,7 +32,6 @@ const ChatPage = () => {
     </div>
   ) : (
     <>
-      <Modal />
       <div className="container h-100 my-4 overflow-hidden rounded shadow">
         <div className="row h-100 bg-white flex-md-row">
           <div className="col-4 col-md-2 border-end px-0 bg-light flex-column h-100 d-flex">

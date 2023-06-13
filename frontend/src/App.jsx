@@ -1,6 +1,7 @@
 import 'bootstrap';
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'react-toastify/dist/ReactToastify.css';
 
 import { BrowserRouter, Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom';
 import Login from './pages/Login';
@@ -16,6 +17,9 @@ import { Provider } from 'react-redux';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
 import i18next from 'i18next';
 import resources from './locales';
+import { ToastContainer } from 'react-toastify';
+import Modal from './pages/Modal';
+import leoProfanity from 'leo-profanity';
 
 const PrivateRoute = () => {
   const auth = useAuth();
@@ -24,6 +28,9 @@ const PrivateRoute = () => {
 };
 
 const App = async () => {
+  const ruDict = leoProfanity.getDictionary('ru');
+  leoProfanity.add(ruDict);
+
   const i18n = i18next.createInstance();
 
   await i18n.use(initReactI18next).init({
@@ -37,6 +44,7 @@ const App = async () => {
         <SocketProvider>
           <AuthProvider>
             <BrowserRouter>
+              <Modal />
               <div className="d-flex flex-column h-100">
                 <Navbar />
                 <Routes>
@@ -48,6 +56,7 @@ const App = async () => {
                   </Route>
                 </Routes>
               </div>
+              <ToastContainer />
             </BrowserRouter>
           </AuthProvider>
         </SocketProvider>

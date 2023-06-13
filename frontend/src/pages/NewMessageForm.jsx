@@ -6,6 +6,7 @@ import * as yup from 'yup';
 import { socket } from '../socket';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import leoProfanity from 'leo-profanity';
 
 const NewMessageForm = () => {
   const { currentChannelId } = useSelector(state => state.channels);
@@ -18,7 +19,8 @@ const NewMessageForm = () => {
     initialValues: { body: '' },
     validationSchema,
     onSubmit: ({ body }, { resetForm, setSubmitting }) => {
-      socket.emit('newMessage', { body, channelId: currentChannelId });
+      const filteredName = leoProfanity.clean(body);
+      socket.emit('newMessage', { body: filteredName, channelId: currentChannelId });
       resetForm();
       setSubmitting(false);
       inputRef.current.focus();
