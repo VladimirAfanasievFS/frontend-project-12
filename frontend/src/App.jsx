@@ -20,6 +20,7 @@ import resources from './locales';
 import { ToastContainer } from 'react-toastify';
 import Modal from './pages/Modal';
 import leoProfanity from 'leo-profanity';
+import { io } from 'socket.io-client';
 
 const PrivateRoute = () => {
   const auth = useAuth();
@@ -38,10 +39,12 @@ const App = async () => {
     fallbackLng: 'ru',
   });
 
+  const socket = io('');
+
   return (
     <I18nextProvider i18n={i18n}>
       <Provider store={store}>
-        <SocketProvider>
+        <SocketProvider socket={socket}>
           <AuthProvider>
             <BrowserRouter>
               <Modal />

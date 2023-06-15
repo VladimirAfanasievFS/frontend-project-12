@@ -1,13 +1,34 @@
 import { useEffect, useState } from 'react';
 import SocketContext from '../contexts/SocketContext';
-import { socket } from '../socket';
 import { useDispatch } from 'react-redux';
 import { addMessage } from '../slices/messages';
 import { addChannel, changeChannel, removeChannel, renameChannel } from '../slices/channels';
 
-const SocketProvider = ({ children }) => {
+const withTimeout = (onSuccess, onError, timeout) => {
+  let called = false;
+
+  const timer = setTimeout(() => {
+    if (called) return;
+    called = true;
+    onError(new Error('timeout socketError'));
+  }, timeout);
+
+  return response => {
+    if (response.status !== 'ok') {
+      onError(new Error(response.status));
+    }
+    if (called) return;
+    called = true;
+    clearTimeout(timer);
+    onSuccess(response);
+  };
+};
+
+const SocketProvider = ({ children, socket }) => {
+  //is connected doesnot use
   const [isConnected, setIsConnected] = useState(socket.connected);
   const dispatch = useDispatch();
+
   useEffect(() => {
     const onConnect = () => {
       setIsConnected(true);
@@ -50,9 +71,21 @@ const SocketProvider = ({ children }) => {
       socket.off('removeChannel', onRemoveChannel);
       socket.off('renameChannel', onRenameChannel);
     };
-  }, [dispatch]);
+  }, [dispatch, socket]);
 
-  return <SocketContext.Provider value={{ isConnected }}>{children}</SocketContext.Provider>;
+  const emitWithAcknowledgements = ({ message, variables }) => {
+    return new Promise((resolve, reject) => {
+      socket.emit(message, variables, withTimeout(resolve, reject, 5000));
+    });
+  };
+
+  const api = {
+    newMessage: variables => emitWithAcknowledgements({ message: 'newMessage', variables }),
+    newChannel: variables => emitWithAcknowledgements({ message: 'newChannel', variables }),
+    removeChannel: variables => emitWithAcknowledgements({ message: 'removeChannel', variables }),
+    renameChannel: variables => emitWithAcknowledgements({ message: 'renameChannel', variables }),
+  };
+  return <SocketContext.Provider value={{ isConnected, api }}>{children}</SocketContext.Provider>;
 };
 
 export default SocketProvider;

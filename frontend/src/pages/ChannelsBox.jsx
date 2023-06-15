@@ -94,6 +94,7 @@ const ChannelsBox = () => {
               handleChoose={handleChoose}
               handleRemove={handleRemove}
               handleRename={handleRename}
+              key={channel.id}
             />
           );
         })}

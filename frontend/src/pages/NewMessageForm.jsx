@@ -1,12 +1,13 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { Form, InputGroup, Button } from 'react-bootstrap';
 import { ArrowRightSquare } from 'react-bootstrap-icons';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import { socket } from '../socket';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import leoProfanity from 'leo-profanity';
+import SocketContext from '../contexts/SocketContext';
+import { toast } from 'react-toastify';
 
 const NewMessageForm = () => {
   const { currentChannelId } = useSelector(state => state.channels);
@@ -15,15 +16,21 @@ const NewMessageForm = () => {
     body: yup.string().trim().required('Required'),
   });
   const inputRef = useRef(null);
+  const { api } = useContext(SocketContext);
+
   const f = useFormik({
     initialValues: { body: '' },
     validationSchema,
-    onSubmit: ({ body }, { resetForm, setSubmitting }) => {
+    onSubmit: async ({ body }) => {
       const filteredName = leoProfanity.clean(body);
-      socket.emit('newMessage', { body: filteredName, channelId: currentChannelId });
-      resetForm();
-      setSubmitting(false);
-      inputRef.current.focus();
+      try {
+        await api.newMessage({ body: filteredName, channelId: currentChannelId });
+        f.resetForm();
+      } catch (error) {
+        toast.error(t('error.networks'));
+      }
+
+      f.setSubmitting(false);
     },
     validateOnBlur: false,
   });
@@ -31,9 +38,10 @@ const NewMessageForm = () => {
   const isInvalid = !f.dirty || !f.isValid;
 
   useEffect(() => {
-    inputRef.current.focus();
-  }, [currentChannelId]);
-
+    if (f.isSubmitting === false) {
+      inputRef.current.focus();
+    }
+  }, [currentChannelId, f.isSubmitting]);
   return (
     <Form noValidate onSubmit={f.handleSubmit} className="py-1 border rounded-2">
       <InputGroup hasValidation={isInvalid}>

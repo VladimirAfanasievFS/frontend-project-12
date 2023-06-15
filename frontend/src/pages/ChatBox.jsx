@@ -4,6 +4,7 @@ import NewMessageForm from './NewMessageForm.jsx';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import find from 'lodash/find';
+import { animateScroll } from 'react-scroll';
 
 const Message = ({ username, body }) => (
   <div className="text-break mb-2">
@@ -25,7 +26,10 @@ const ChatBox = () => {
 
   const channel = find(channels, channel => channel.id === currentChannelId);
 
-  //cкролл вниз react-scroll
+  useEffect(() => {
+    animateScroll.scrollToBottom({ containerId: 'messages-box', delay: 0, duration: 300 });
+  }, [messages.length]);
+
   return (
     <div className="d-flex flex-column h-100">
       <div className="bg-light mb-4 p-3 shadow-sm small">

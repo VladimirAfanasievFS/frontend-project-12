@@ -1,32 +1,33 @@
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import { Button, Modal as BootstrapModal, Form, FormGroup, FormControl } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { hideModal } from '../slices/modal';
+import { toast } from 'react-toastify';
+import leoProfanity from 'leo-profanity';
 import { useFormik } from 'formik';
-import { socket } from '../socket';
 import * as Yup from 'yup';
 import find from 'lodash/find';
 import { useTranslation } from 'react-i18next';
-import { toast } from 'react-toastify';
-import leoProfanity from 'leo-profanity';
+
+import { hideModal } from '../slices/modal';
+import SocketContext from '../contexts/SocketContext';
 export const TYPE = { ADD: 'add', REMOVE: 'remove', RENAME: 'rename' };
 
 const AddChannelModal = ({ handleClose }) => {
   const { channels } = useSelector(state => state.channels);
   const { t } = useTranslation();
-
+  const { api } = useContext(SocketContext);
   const f = useFormik({
     onSubmit: async values => {
       const filteredName = leoProfanity.clean(values.body);
-      socket.emit('newChannel', { name: filteredName }, ({ status }) => {
-        if (status === 'ok') {
-          handleClose();
-        } else {
-          console.warn('newChannel EROROROR');
-          f.setSubmitting(false);
-        }
-      });
-      toast.success(t('channels.created'));
+      try {
+        await api.newChannel({ name: filteredName });
+        toast.success(t('channels.created'));
+        handleClose();
+      } catch {
+        toast.error(t('error.networks'));
+      }
+
+      f.setSubmitting(false);
     },
     initialValues: { body: '' },
     validationSchema: Yup.object().shape({
@@ -74,18 +75,18 @@ const AddChannelModal = ({ handleClose }) => {
 const RemoveChannelModal = ({ handleClose }) => {
   const { id } = useSelector(state => state.modal.payload);
   const { t } = useTranslation();
+  const { api } = useContext(SocketContext);
 
   const handleSubmit = async e => {
     e.preventDefault();
 
-    socket.emit('removeChannel', { id }, ({ status }) => {
-      if (status === 'ok') {
-        handleClose();
-      } else {
-        console.warn('removeChannel EROROROR');
-      }
+    try {
+      await api.removeChannel({ id });
       toast.success(t('channels.removed'));
-    });
+      handleClose();
+    } catch {
+      toast.error(t('error.networks'));
+    }
   };
 
   return (
@@ -109,19 +110,19 @@ const RenameChannelModal = ({ handleClose }) => {
   const { id } = useSelector(state => state.modal.payload);
   const channels = useSelector(state => state.channels.channels);
   const { t } = useTranslation();
+  const { api } = useContext(SocketContext);
 
   const channel = find(channels, channel => channel.id === id);
 
   const f = useFormik({
     onSubmit: async values => {
-      socket.emit('renameChannel', { id, name: values.body }, ({ status }) => {
-        if (status === 'ok') {
-          handleClose();
-        } else {
-          console.warn('renameChannel EROROROR');
-        }
-      });
-      toast.success(t('channels.renamed'));
+      try {
+        await api.renameChannel({ id, name: values.body });
+        toast.success(t('channels.renamed'));
+        handleClose();
+      } catch {
+        toast.error(t('error.networks'));
+      }
     },
     initialValues: { body: channel?.name },
     validationSchema: Yup.object().shape({
