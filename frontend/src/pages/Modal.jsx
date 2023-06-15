@@ -67,6 +67,9 @@ const AddChannelModal = ({ handleClose }) => {
               isInvalid={!!f.errors.body}
               placeholder={t('modals.channelName')}
             />
+            <label className="visually-hidden" htmlFor="name">
+              {t('modals.channelName')}
+            </label>
             <Form.Control.Feedback type="invalid">{t(f.errors.body)}</Form.Control.Feedback>
           </FormGroup>
           <Button type="submit" className="btn btn-primary">
