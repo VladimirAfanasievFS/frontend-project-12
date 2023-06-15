@@ -167,6 +167,7 @@ const RenameChannelModal = ({ handleClose }) => {
               onBlur={f.handleBlur}
               value={f.values.body}
               name="body"
+              id="body"
               isInvalid={f.errors.body && f.touched.body}
             />
             <label className="visually-hidden" htmlFor="body">
