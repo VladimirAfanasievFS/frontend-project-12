@@ -105,7 +105,7 @@ const RemoveChannelModal = ({ handleClose }) => {
       <BootstrapModal.Body>
         <Form onSubmit={handleSubmit}>
           <div>{t('modals.confirmation')}</div>
-          <Button type="submit" className="btn btn-primary">
+          <Button type="submit" className="btn btn-danger">
             {t('modals.confirm')}
           </Button>
         </Form>
