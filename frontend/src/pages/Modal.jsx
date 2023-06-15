@@ -169,8 +169,8 @@ const RenameChannelModal = ({ handleClose }) => {
               name="body"
               isInvalid={f.errors.body && f.touched.body}
             />
-            <label className="visually-hidden" htmlFor="body">
-              {t('channels.menu')}
+            <label className="visually-hidden" htmlFor="name">
+              {t('modals.channelName')}
             </label>
             <Form.Control.Feedback type="invalid">{t(f.errors.body)}</Form.Control.Feedback>
           </FormGroup>
