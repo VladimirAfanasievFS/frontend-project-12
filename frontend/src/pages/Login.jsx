@@ -71,7 +71,7 @@ const LoginForm = () => {
                     isInvalid={(f.touched.username && f.errors.username) || isUserUnknownError}
                   />
                   <Form.Control.Feedback type="invalid">
-                    {isUserUnknownError ? 'userUnknown' : t(f.errors.username)}
+                    {isUserUnknownError ? t('login.authFailed') : t(f.errors.username)}
                   </Form.Control.Feedback>
                 </Form.Group>
 
