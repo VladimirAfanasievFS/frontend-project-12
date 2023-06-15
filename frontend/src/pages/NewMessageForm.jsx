@@ -51,7 +51,7 @@ const NewMessageForm = () => {
           onBlur={f.handleBlur}
           value={f.values.body}
           name="body"
-          // aria-label={t('chat.newMessage')}
+          aria-label={t('chat.newMessage')}
           disabled={f.isSubmitting}
           className="border-0 p-0 ps-2"
           ref={inputRef}
