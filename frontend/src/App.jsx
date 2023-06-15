@@ -52,7 +52,7 @@ const App = async () => {
                 <Navbar />
                 <Routes>
                   <Route path="login" element={<Login />} />
-                  <Route path="registration" element={<Registration />} />
+                  <Route path="signup" element={<Registration />} />
                   <Route path="" element={<PrivateRoute />}>
                     <Route path="/" element={<ChatPage />} />
                     <Route path="*" element={<Error />} />

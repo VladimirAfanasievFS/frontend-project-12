@@ -94,7 +94,7 @@ const LoginForm = () => {
                   <Button variant="primary" type="submit" disabled={f.isSubmitting}>
                     {t('login.submit')}
                   </Button>
-                  <Link to="/registration"> {t('login.signup')}</Link>
+                  <Link to="/signup"> {t('login.signup')}</Link>
                 </div>
               </Form>
             </div>

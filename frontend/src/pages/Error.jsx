@@ -8,7 +8,7 @@ const Error = () => {
       <h3>{t('notFound.header')}</h3>
       <div>
         {t('notFound.message')}
-        <Link to="/registration"> {t('notFound.linkText')}</Link>
+        <Link to="/signup"> {t('notFound.linkText')}</Link>
       </div>
     </>
   );
