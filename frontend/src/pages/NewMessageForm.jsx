@@ -46,7 +46,7 @@ const NewMessageForm = () => {
     <Form noValidate onSubmit={f.handleSubmit} className="py-1 border rounded-2">
       <InputGroup hasValidation={isInvalid}>
         <Form.Control
-          placeholder={t('chat.enterMessage')}
+          placeholder={t('chat.newMessage')}
           onChange={f.handleChange}
           onBlur={f.handleBlur}
           value={f.values.body}
