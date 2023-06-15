@@ -6,12 +6,15 @@ import { signUpPath } from '../routes';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
+import { useTranslation } from 'react-i18next';
 
 const Registration = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { logIn } = useAuth();
   const inputRef = useRef();
+  const { t } = useTranslation();
+
   const f = useFormik({
     initialValues: {
       username: '',
@@ -67,7 +70,7 @@ const Registration = () => {
             <div className="card-body">
               <Form onSubmit={f.handleSubmit}>
                 <Form.Group controlId="username">
-                  <Form.Label>Username</Form.Label>
+                  <Form.Label>{t('signup.username')}</Form.Label>
                   <Form.Control
                     type="text"
                     name="username"
@@ -85,7 +88,7 @@ const Registration = () => {
                 </Form.Group>
 
                 <Form.Group controlId="password">
-                  <Form.Label>Password</Form.Label>
+                  <Form.Label>{t('signup.password')}</Form.Label>
                   <Form.Control
                     type="password"
                     name="password"
@@ -100,11 +103,11 @@ const Registration = () => {
                 </Form.Group>
 
                 <Form.Group controlId="confirmPassword" hasValidation>
-                  <Form.Label>Confirm Password</Form.Label>
+                  <Form.Label> {t('signup.confirm')}</Form.Label>
                   <Form.Control
                     type="password"
                     name="confirmPassword"
-                    placeholder="Confirm password"
+                    placeholder={t('signup.confirm')}
                     value={f.values.confirmPassword}
                     onChange={f.handleChange}
                     onBlur={f.handleBlur}
@@ -118,7 +121,7 @@ const Registration = () => {
                 </Form.Group>
 
                 <Button variant="primary" type="submit">
-                  Register
+                  {t('signup.header')}
                 </Button>
               </Form>
             </div>
