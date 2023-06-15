@@ -9,8 +9,8 @@ import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 const LoginSchema = Yup.object().shape({
-  username: Yup.string().required('Required'),
-  password: Yup.string().required('Required'),
+  username: Yup.string().required('modals.required'),
+  password: Yup.string().required('modals.required'),
 });
 
 const LoginForm = () => {
@@ -63,7 +63,7 @@ const LoginForm = () => {
                   <Form.Control
                     type="text"
                     name="username"
-                    placeholder="Enter username"
+                    placeholder={t('login.username')}
                     value={f.values.username}
                     onChange={f.handleChange}
                     onBlur={f.handleBlur}
@@ -71,7 +71,7 @@ const LoginForm = () => {
                     isInvalid={(f.touched.username && f.errors.username) || isUserUnknownError}
                   />
                   <Form.Control.Feedback type="invalid">
-                    {isUserUnknownError ? 'userUnknown' : f.errors.username}
+                    {isUserUnknownError ? 'userUnknown' : t(f.errors.username)}
                   </Form.Control.Feedback>
                 </Form.Group>
 
@@ -80,14 +80,16 @@ const LoginForm = () => {
                   <Form.Control
                     type="password"
                     name="password"
-                    placeholder="Enter password"
+                    placeholder={t('login.password')}
                     value={f.values.password}
                     onChange={f.handleChange}
                     onBlur={f.handleBlur}
                     isInvalid={(f.touched.password && f.errors.password) || isUserUnknownError}
                   />
 
-                  <Form.Control.Feedback type="invalid">{f.errors.password}</Form.Control.Feedback>
+                  <Form.Control.Feedback type="invalid">
+                    {t(f.errors.password)}
+                  </Form.Control.Feedback>
                 </Form.Group>
 
                 <div className="d-flex justify-content-between align-items-center">

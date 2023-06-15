@@ -32,10 +32,14 @@ const AddChannelModal = ({ handleClose }) => {
     initialValues: { body: '' },
     validationSchema: Yup.object().shape({
       body: Yup.string()
-        .min(3, 'Too Short!')
-        .max(10, 'Too Long!')
-        .notOneOf(channels.map(({ name }) => name))
-        .required('Required!'),
+        .trim()
+        .required('modals.required')
+        .min(3, 'modals.min')
+        .max(20, 'modals.max')
+        .notOneOf(
+          channels.map(({ name }) => name),
+          'modals.uniq',
+        ),
     }),
     validateOnBlur: false,
     validateOnChange: false,
@@ -62,7 +66,7 @@ const AddChannelModal = ({ handleClose }) => {
               name="body"
               isInvalid={!!f.errors.body}
             />
-            <Form.Control.Feedback type="invalid">{f.errors.body}</Form.Control.Feedback>
+            <Form.Control.Feedback type="invalid">{t(f.errors.body)}</Form.Control.Feedback>
           </FormGroup>
           <Button type="submit" className="btn btn-primary">
             {t('modals.submit')}
@@ -127,10 +131,14 @@ const RenameChannelModal = ({ handleClose }) => {
     initialValues: { body: channel?.name },
     validationSchema: Yup.object().shape({
       body: Yup.string()
-        .min(3, 'Too Short!')
-        .max(10, 'Too Long!')
-        .notOneOf(channels.map(({ name }) => name))
-        .required('Required!'),
+        .trim()
+        .required('modals.required')
+        .min(3, 'modals.min')
+        .max(20, 'modals.max')
+        .notOneOf(
+          channels.map(({ name }) => name),
+          'modals.uniq',
+        ),
     }),
     validateOnBlur: false,
     validateOnChange: false,
@@ -157,7 +165,7 @@ const RenameChannelModal = ({ handleClose }) => {
               name="body"
               isInvalid={f.errors.body && f.touched.body}
             />
-            <Form.Control.Feedback type="invalid">{f.errors.body}</Form.Control.Feedback>
+            <Form.Control.Feedback type="invalid">{t(f.errors.body)}</Form.Control.Feedback>
           </FormGroup>
           <Button type="submit" className="btn btn-primary">
             {t('modals.submit')}

@@ -23,15 +23,16 @@ const Registration = () => {
     },
     validationSchema: Yup.object().shape({
       username: Yup.string()
-        .required('Username is required')
-        .min(3, 'Username must be at least 3 characters')
-        .max(20, 'Username must be less than 20 characters'),
-      password: Yup.string()
-        .required('Password is required')
-        .min(6, 'Password must be at least 6 characters'),
-      confirmPassword: Yup.string()
-        .oneOf([Yup.ref('password'), null], 'Passwords must match')
-        .required('Confirm Password is required'),
+        .required('signup.required')
+        .min(3, 'signup.usernameConstraints')
+        .max(20, 'signup.usernameConstraints'),
+
+      password: Yup.string().required('signup.required').min(6, 'signup.passMin'),
+      confirmPassword: Yup.string().test(
+        'confirmPassword',
+        'signup.mustMatch',
+        (value, context) => value === context.parent.password,
+      ),
     }),
     onSubmit: async values => {
       // Отправка данных на сервер или другая логика обработки формы
@@ -83,7 +84,7 @@ const Registration = () => {
                   />
 
                   <Form.Control.Feedback type="invalid">
-                    {isUserExistedError ? 'userExisted' : f.errors.username}
+                    {isUserExistedError ? 'userExisted' : t(f.errors.username)}
                   </Form.Control.Feedback>
                 </Form.Group>
 
@@ -99,7 +100,9 @@ const Registration = () => {
                     isInvalid={(f.touched.password && f.errors.password) || isUserExistedError}
                   />
 
-                  <Form.Control.Feedback type="invalid">{f.errors.password}</Form.Control.Feedback>
+                  <Form.Control.Feedback type="invalid">
+                    {t(f.errors.password)}
+                  </Form.Control.Feedback>
                 </Form.Group>
 
                 <Form.Group controlId="confirmPassword" hasValidation>
@@ -116,7 +119,7 @@ const Registration = () => {
                     }
                   />
                   <Form.Control.Feedback type="invalid">
-                    {f.errors.confirmPassword}
+                    {t(f.errors.confirmPassword)}
                   </Form.Control.Feedback>
                 </Form.Group>
 

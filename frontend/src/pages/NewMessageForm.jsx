@@ -13,7 +13,7 @@ const NewMessageForm = () => {
   const { currentChannelId } = useSelector(state => state.channels);
   const { t } = useTranslation();
   const validationSchema = yup.object().shape({
-    body: yup.string().trim().required('Required'),
+    body: yup.string().trim().required('modals.required'),
   });
   const inputRef = useRef(null);
   const { api } = useContext(SocketContext);
