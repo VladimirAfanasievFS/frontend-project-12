@@ -65,6 +65,7 @@ const AddChannelModal = ({ handleClose }) => {
               value={f.values.body}
               name="body"
               isInvalid={!!f.errors.body}
+              placeholder={t('modals.channelName')}
             />
             <Form.Control.Feedback type="invalid">{t(f.errors.body)}</Form.Control.Feedback>
           </FormGroup>
