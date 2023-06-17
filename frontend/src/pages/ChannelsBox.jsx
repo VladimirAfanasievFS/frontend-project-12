@@ -2,10 +2,10 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, Dropdown, ButtonGroup } from 'react-bootstrap';
 import { PlusSquare } from 'react-bootstrap-icons';
+import { useTranslation } from 'react-i18next';
 import { showModal } from '../slices/modal';
 import { TYPE } from './Modal';
 import { changeChannel } from '../slices/channels';
-import { useTranslation } from 'react-i18next';
 
 const Channel = ({ channel, isCurrent, handleChoose, handleRemove, handleRename }) => {
   const variant = isCurrent ? 'primary' : 'light';

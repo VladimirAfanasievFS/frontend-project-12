@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 
 import { hideModal } from '../slices/modal';
 import SocketContext from '../contexts/SocketContext';
+
 export const TYPE = { ADD: 'add', REMOVE: 'remove', RENAME: 'rename' };
 
 const AddChannelModal = ({ handleClose }) => {
@@ -115,17 +116,17 @@ const RemoveChannelModal = ({ handleClose }) => {
 };
 
 const RenameChannelModal = ({ handleClose }) => {
-  const { id } = useSelector(state => state.modal.payload);
+  const { id: modalId } = useSelector(state => state.modal.payload);
   const channels = useSelector(state => state.channels.channels);
   const { t } = useTranslation();
   const { api } = useContext(SocketContext);
 
-  const channel = find(channels, channel => channel.id === id);
+  const channel = find(channels, ({ id }) => id === modalId);
 
   const f = useFormik({
     onSubmit: async values => {
       try {
-        await api.renameChannel({ id, name: values.body });
+        await api.renameChannel({ id: modalId, name: values.body });
         toast.success(t('channels.renamed'));
         handleClose();
       } catch {

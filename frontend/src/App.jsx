@@ -4,6 +4,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { BrowserRouter, Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { I18nextProvider, initReactI18next } from 'react-i18next';
+import i18next from 'i18next';
+import { ToastContainer } from 'react-toastify';
+import leoProfanity from 'leo-profanity';
+import { io } from 'socket.io-client';
 import Login from './pages/Login';
 import Error from './pages/Error';
 import useAuth from './hooks/useAuth';
@@ -13,14 +19,8 @@ import ChatPage from './pages/ChatPage';
 import SocketProvider from './providers/SocketProvider';
 import Registration from './pages/Registration';
 import store from './slices/index.js';
-import { Provider } from 'react-redux';
-import { I18nextProvider, initReactI18next } from 'react-i18next';
-import i18next from 'i18next';
 import resources from './locales';
-import { ToastContainer } from 'react-toastify';
 import Modal from './pages/Modal';
-import leoProfanity from 'leo-profanity';
-import { io } from 'socket.io-client';
 
 const PrivateRoute = () => {
   const auth = useAuth();

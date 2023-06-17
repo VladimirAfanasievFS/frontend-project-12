@@ -3,10 +3,10 @@ import { useRef } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { loginPath } from '../routes';
-import useAuth from '../hooks/useAuth';
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { loginPath } from '../routes';
+import useAuth from '../hooks/useAuth';
 
 const LoginSchema = Yup.object().shape({
   username: Yup.string().required('modals.required'),
@@ -18,6 +18,7 @@ const LoginForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const inputRef = useRef();
+
   const { t } = useTranslation();
   const f = useFormik({
     initialValues: {

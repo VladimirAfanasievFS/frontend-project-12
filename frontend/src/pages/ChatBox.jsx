@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 
-import NewMessageForm from './NewMessageForm.jsx';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import find from 'lodash/find';
 import { animateScroll } from 'react-scroll';
+import NewMessageForm from './NewMessageForm.jsx';
 
 const Message = ({ username, body }) => (
   <div className="text-break mb-2">
@@ -16,15 +16,15 @@ const Message = ({ username, body }) => (
 
 const ChatBox = () => {
   const messages = useSelector(state =>
-    state.messages.messages.filter(message => {
-      return message.channelId === state.channels.currentChannelId;
-    }),
+    state.messages.messages.filter(
+      message => message.channelId === state.channels.currentChannelId,
+    ),
   );
   const { t } = useTranslation();
 
   const { channels, currentChannelId } = useSelector(state => state.channels);
 
-  const channel = find(channels, channel => channel.id === currentChannelId);
+  const channel = find(channels, ({ id }) => id === currentChannelId);
 
   useEffect(() => {
     animateScroll.scrollToBottom({ containerId: 'messages-box', delay: 0, duration: 300 });
@@ -42,7 +42,7 @@ const ChatBox = () => {
       </div>
       <div id="messages-box" className="chat-messages overflow-auto px-5 ">
         {messages.map(message => (
-          <Message username={'username'} body={message.body} key={message.id} />
+          <Message username="username" body={message.body} key={message.id} />
         ))}
       </div>
       <div className="mt-auto px-5 py-3">

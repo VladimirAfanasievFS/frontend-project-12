@@ -2,11 +2,11 @@ import React, { useRef } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { signUpPath } from '../routes';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
-import useAuth from '../hooks/useAuth';
 import { useTranslation } from 'react-i18next';
+import useAuth from '../hooks/useAuth';
+import { signUpPath } from '../routes';
 
 const Registration = () => {
   const location = useLocation();
