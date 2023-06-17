@@ -5,6 +5,7 @@ import * as Yup from 'yup';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 import useAuth from '../hooks/useAuth';
 import { signUpPath } from '../routes';
 
@@ -42,20 +43,14 @@ const Registration = () => {
         const { from } = location.state || { from: { pathname: '/' } };
         navigate(from);
       } catch (err) {
-        console.log('🚀 ~ file: Login.js:33 ~ onSubmit={ ~ err:', err);
-        // setSubmitting(false);
         if (err.response.status === 409) {
           f.setStatus('userExisted');
           inputRef.current.select();
           return;
         }
         if (err.isAxiosError) {
-          // setAuthFailed(true);
-          // inputRef.current.select();
-          return;
+          toast.error(t('error.networks'));
         }
-
-        throw err;
       }
     },
   });
@@ -73,7 +68,7 @@ const Registration = () => {
                   <Form.Control
                     type="text"
                     name="username"
-                    placeholder="Enter username"
+                    placeholder={t('signup.username')}
                     value={f.values.username}
                     onChange={f.handleChange}
                     onBlur={f.handleBlur}
@@ -91,7 +86,7 @@ const Registration = () => {
                   <Form.Control
                     type="password"
                     name="password"
-                    placeholder="Enter password"
+                    placeholder={t('signup.password')}
                     value={f.values.password}
                     onChange={f.handleChange}
                     onBlur={f.handleBlur}
