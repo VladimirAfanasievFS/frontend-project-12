@@ -3,18 +3,20 @@ import AuthContext from '../contexts/AuthContext';
 
 const AuthProvider = ({ children }) => {
   const [isLogged, setIsLogged] = useState(!!JSON.parse(localStorage.getItem('user'))?.token);
-  const [token, setToken] = useState(JSON.parse(localStorage.getItem('user'))?.token);
-  const [userName, setUsername] = useState(null);
+  const [token, setToken] = useState(JSON.parse(localStorage.getItem('user'))?.token || null);
+  const [userName, setUsername] = useState(JSON.parse(localStorage.getItem('user'))?.username || null);
 
   const authContextValue = useMemo(() => {
     const logIn = (data) => {
       localStorage.setItem('user', JSON.stringify({ token: data.token, username: data.username }));
-      setUsername(userName);
-      setToken(token);
+      setUsername(data.username);
+      setToken(data.token);
       setIsLogged(true);
     };
     const logOut = () => {
       localStorage.removeItem('user');
+      setUsername(null);
+      setToken(null);
       setIsLogged(false);
     };
 

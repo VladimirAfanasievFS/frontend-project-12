@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import leoProfanity from 'leo-profanity';
 import { toast } from 'react-toastify';
 import SocketContext from '../contexts/SocketContext';
+import useAuth from '../hooks/useAuth';
 
 const NewMessageForm = () => {
   const { currentChannelId } = useSelector((state) => state.channels);
@@ -17,14 +18,18 @@ const NewMessageForm = () => {
   });
   const inputRef = useRef(null);
   const { api } = useContext(SocketContext);
-
+  const auth = useAuth();
   const f = useFormik({
     initialValues: { body: '' },
     validationSchema,
     onSubmit: async ({ body }) => {
       const filteredName = leoProfanity.clean(body);
       try {
-        await api.newMessage({ body: filteredName, channelId: currentChannelId });
+        await api.newMessage({
+          body: filteredName,
+          channelId: currentChannelId,
+          userName: auth.userName,
+        });
         f.resetForm();
       } catch (error) {
         toast.error(t('error.networks'));

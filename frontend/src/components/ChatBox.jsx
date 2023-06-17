@@ -45,7 +45,7 @@ const ChatBox = () => {
       </div>
       <div id="messages-box" className="chat-messages overflow-auto px-5 ">
         {messages.map((message) => (
-          <Message username="username" body={message.body} key={message.id} />
+          <Message username={message.userName} body={message.body} key={message.id} />
         ))}
       </div>
       <div className="mt-auto px-5 py-3">
