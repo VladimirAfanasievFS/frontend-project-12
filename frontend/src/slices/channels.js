@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
 import find from 'lodash/find';
 import remove from 'lodash/remove';

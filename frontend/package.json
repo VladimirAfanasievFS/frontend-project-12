@@ -30,6 +30,7 @@
   },
   "devDependencies": {
     "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-functional": "^5.0.8",
     "eslint-plugin-prettier": "^4.2.1",
     "prettier": "^2.8.7"
   },
@@ -47,25 +48,7 @@
     ],
     "plugins": [
       "prettier"
-    ],
-    "rules": {
-      "prettier/prettier": [
-        "error",
-        {
-          "singleQuote": true,
-          "printWidth": 100,
-          "semi": true,
-          "trailingComma": "all",
-          "arrowParens": "avoid"
-        }
-      ],
-      "import/no-anonymous-default-export": [
-        2,
-        {
-          "allowObject": true
-        }
-      ]
-    }
+    ]
   },
   "browserslist": {
     "production": [

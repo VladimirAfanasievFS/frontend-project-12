@@ -6,8 +6,8 @@ import * as yup from 'yup';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import leoProfanity from 'leo-profanity';
-import SocketContext from '../contexts/SocketContext';
 import { toast } from 'react-toastify';
+import SocketContext from '../contexts/SocketContext';
 
 const NewMessageForm = () => {
   const { currentChannelId } = useSelector(state => state.channels);
