@@ -13,17 +13,17 @@ import { ToastContainer } from 'react-toastify';
 import leoProfanity from 'leo-profanity';
 import { io } from 'socket.io-client';
 import { Provider as RollbarProvider, ErrorBoundary as ErrorBoundaryRollbar, LEVEL_ERROR } from '@rollbar/react';
-import Login from './pages/Login';
-import Error from './pages/Error';
+import Login from './components/Login';
+import Error from './components/Error';
 import useAuth from './hooks/useAuth';
 import AuthProvider from './providers/AuthProvider';
-import Navbar from './pages/Navbar';
-import ChatPage from './pages/ChatPage';
+import Navbar from './components/Navbar';
+import ChatPage from './components/ChatPage';
 import SocketProvider from './providers/SocketProvider';
-import Registration from './pages/Registration';
+import Registration from './components/Registration';
 import store from './slices/index.js';
 import resources from './locales';
-import Modal from './pages/Modal';
+import Modal from './components/Modal';
 
 const PrivateRoute = () => {
   const auth = useAuth();
