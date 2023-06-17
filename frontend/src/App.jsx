@@ -28,7 +28,7 @@ import Modal from './pages/Modal';
 const PrivateRoute = () => {
   const auth = useAuth();
   const location = useLocation();
-  return auth.loggedIn ? <Outlet /> : <Navigate to="/login" state={{ from: location }} />;
+  return auth.isLogged ? <Outlet /> : <Navigate to="/login" state={{ from: location }} />;
 };
 
 const App = async () => {

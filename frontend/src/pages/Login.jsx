@@ -16,7 +16,7 @@ const LoginSchema = Yup.object().shape({
 });
 
 const LoginForm = () => {
-  const { logIn, loggedIn } = useAuth();
+  const { logIn, isLogged } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const inputRef = useRef();
@@ -31,8 +31,7 @@ const LoginForm = () => {
     onSubmit: async (values, { setSubmitting, setStatus }) => {
       try {
         const res = await axios.post(loginPath(), values);
-        localStorage.setItem('userId', JSON.stringify(res.data));
-        logIn();
+        logIn({ token: res.data.token, username: res.data.username });
         const { from } = location.state || { from: { pathname: '/' } };
         navigate(from);
       } catch (err) {
@@ -47,7 +46,7 @@ const LoginForm = () => {
     },
   });
 
-  if (loggedIn) {
+  if (isLogged) {
     return <Navigate to="/" state={{ from: location }} />;
   }
 

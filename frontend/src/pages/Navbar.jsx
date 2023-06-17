@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import useAuth from '../hooks/useAuth';
 
 const Navbar = () => {
-  const { logOut, loggedIn } = useAuth();
+  const { logOut, isLogged } = useAuth();
   const { t } = useTranslation();
   return (
     <BootstrapNavbar bg="white" expand="lg" className="shadow-sm">
@@ -15,7 +15,7 @@ const Navbar = () => {
         <BootstrapNavbar.Brand as={Link} to="/">
           {t('hexletChat')}
         </BootstrapNavbar.Brand>
-        {loggedIn && <Button onClick={logOut}>{t('logout')}</Button>}
+        {isLogged && <Button onClick={logOut}>{t('logout')}</Button>}
       </div>
     </BootstrapNavbar>
   );

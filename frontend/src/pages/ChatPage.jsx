@@ -7,22 +7,24 @@ import ChannelsBox from './ChannelsBox.jsx';
 import ChatBox from './ChatBox.jsx';
 import { dataPath } from '../routes.js';
 import { setInitialState } from '../slices/channels.js';
+import useAuth from '../hooks/useAuth.js';
+
+const generateAuthHeader = (token) => `Authorization: Bearer ${token}`;
 
 const ChatPage = () => {
   const [fetching, setFetching] = useState(true);
   const dispatch = useDispatch();
-
+  const { token } = useAuth();
   useEffect(() => {
     async function fetchData() {
-      const token = JSON.parse(localStorage.getItem('userId'))?.token;
-      const res = await axios.get(dataPath(), { headers: `Authorization: Bearer ${token}` });
+      const res = await axios.get(dataPath(), { headers: generateAuthHeader(token) });
       const { channels, currentChannelId, messages } = res.data;
       dispatch(setInitialState({ channels, currentChannelId, messages }));
 
       setFetching(false);
     }
     fetchData();
-  }, []);
+  }, [dispatch, token]);
 
   return fetching ? (
     <div className="h-100 d-flex justify-content-center align-items-center">

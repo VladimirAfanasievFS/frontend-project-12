@@ -35,12 +35,10 @@ const Registration = () => {
       ),
     }),
     onSubmit: async (values) => {
-      // Отправка данных на сервер или другая логика обработки формы
       f.setStatus('valid');
       try {
         const res = await axios.post(signUpPath(), values);
-        localStorage.setItem('userId', JSON.stringify(res.data));
-        logIn();
+        logIn({ token: res.data.token, username: res.data.username });
         const { from } = location.state || { from: { pathname: '/' } };
         navigate(from);
       } catch (err) {
