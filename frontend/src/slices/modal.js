@@ -18,7 +18,7 @@ const modalSlice = createSlice({
       state.type = type;
       state.payload = payload;
     },
-    hideModal: state => {
+    hideModal: (state) => {
       state.isVisible = false;
     },
   },

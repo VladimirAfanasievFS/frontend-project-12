@@ -3,7 +3,9 @@ import { useRef } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
+import {
+  Link, Navigate, useLocation, useNavigate,
+} from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { loginPath } from '../routes';
 import useAuth from '../hooks/useAuth';
@@ -97,7 +99,10 @@ const LoginForm = () => {
                   <Button variant="primary" type="submit" disabled={f.isSubmitting}>
                     {t('login.submit')}
                   </Button>
-                  <Link to="/signup"> {t('login.signup')}</Link>
+                  <Link to="/signup">
+                    {' '}
+                    {t('login.signup')}
+                  </Link>
                 </div>
               </Form>
             </div>

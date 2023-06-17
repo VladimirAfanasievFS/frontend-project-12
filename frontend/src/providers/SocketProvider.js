@@ -2,7 +2,9 @@ import { useEffect, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import SocketContext from '../contexts/SocketContext';
 import { addMessage } from '../slices/messages';
-import { addChannel, changeChannel, removeChannel, renameChannel } from '../slices/channels';
+import {
+  addChannel, changeChannel, removeChannel, renameChannel,
+} from '../slices/channels';
 
 const withTimeout = (onSuccess, onError, timeout) => {
   // eslint-disable-next-line functional/no-let
@@ -14,7 +16,7 @@ const withTimeout = (onSuccess, onError, timeout) => {
     onError(new Error('timeout socketError'));
   }, timeout);
 
-  return response => {
+  return (response) => {
     if (response.status !== 'ok') {
       onError(new Error(response.status));
     }
@@ -29,21 +31,21 @@ const SocketProvider = ({ children, socket }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const onNewMessage = message => {
+    const onNewMessage = (message) => {
       dispatch(addMessage({ message }));
     };
 
-    const onNewChannel = channel => {
+    const onNewChannel = (channel) => {
       dispatch(addChannel({ channel }));
       dispatch(changeChannel({ channelId: channel.id }));
     };
 
-    const onRemoveChannel = channel => {
+    const onRemoveChannel = (channel) => {
       dispatch(removeChannel({ channelId: channel.id }));
       dispatch(changeChannel({ channelId: 1 }));
     };
 
-    const onRenameChannel = channel => {
+    const onRenameChannel = (channel) => {
       dispatch(renameChannel({ channelId: channel.id, name: channel.name }));
     };
 
@@ -61,16 +63,15 @@ const SocketProvider = ({ children, socket }) => {
   }, [dispatch, socket]);
 
   const socketApiContext = useMemo(() => {
-    const emitWithAcknowledgements = ({ message, variables }) =>
-      new Promise((resolve, reject) => {
-        socket.emit(message, variables, withTimeout(resolve, reject, 5000));
-      });
+    const emitWithAcknowledgements = ({ message, variables }) => new Promise((resolve, reject) => {
+      socket.emit(message, variables, withTimeout(resolve, reject, 5000));
+    });
 
     const api = {
-      newMessage: variables => emitWithAcknowledgements({ message: 'newMessage', variables }),
-      newChannel: variables => emitWithAcknowledgements({ message: 'newChannel', variables }),
-      removeChannel: variables => emitWithAcknowledgements({ message: 'removeChannel', variables }),
-      renameChannel: variables => emitWithAcknowledgements({ message: 'renameChannel', variables }),
+      newMessage: (variables) => emitWithAcknowledgements({ message: 'newMessage', variables }),
+      newChannel: (variables) => emitWithAcknowledgements({ message: 'newChannel', variables }),
+      removeChannel: (variables) => emitWithAcknowledgements({ message: 'removeChannel', variables }),
+      renameChannel: (variables) => emitWithAcknowledgements({ message: 'renameChannel', variables }),
     };
     return { api };
   }, [socket]);

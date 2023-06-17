@@ -13,7 +13,7 @@ const messagesSlice = createSlice({
       state.messages.push(message);
     },
   },
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder
       .addCase(setInitialState, (state, { payload }) => {
         const { messages } = payload;

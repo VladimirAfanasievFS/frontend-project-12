@@ -1,5 +1,7 @@
 import { useContext, useEffect, useRef } from 'react';
-import { Button, Modal as BootstrapModal, Form, FormGroup, FormControl } from 'react-bootstrap';
+import {
+  Button, Modal as BootstrapModal, Form, FormGroup, FormControl,
+} from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import leoProfanity from 'leo-profanity';
@@ -14,11 +16,11 @@ import SocketContext from '../contexts/SocketContext';
 export const TYPE = { ADD: 'add', REMOVE: 'remove', RENAME: 'rename' };
 
 const AddChannelModal = ({ handleClose }) => {
-  const { channels } = useSelector(state => state.channels);
+  const { channels } = useSelector((state) => state.channels);
   const { t } = useTranslation();
   const { api } = useContext(SocketContext);
   const f = useFormik({
-    onSubmit: async values => {
+    onSubmit: async (values) => {
       const filteredName = leoProfanity.clean(values.body);
       try {
         await api.newChannel({ name: filteredName });
@@ -82,11 +84,11 @@ const AddChannelModal = ({ handleClose }) => {
   );
 };
 const RemoveChannelModal = ({ handleClose }) => {
-  const { id } = useSelector(state => state.modal.payload);
+  const { id } = useSelector((state) => state.modal.payload);
   const { t } = useTranslation();
   const { api } = useContext(SocketContext);
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
@@ -116,15 +118,15 @@ const RemoveChannelModal = ({ handleClose }) => {
 };
 
 const RenameChannelModal = ({ handleClose }) => {
-  const { id: modalId } = useSelector(state => state.modal.payload);
-  const channels = useSelector(state => state.channels.channels);
+  const { id: modalId } = useSelector((state) => state.modal.payload);
+  const channels = useSelector((state) => state.channels.channels);
   const { t } = useTranslation();
   const { api } = useContext(SocketContext);
 
   const channel = find(channels, ({ id }) => id === modalId);
 
   const f = useFormik({
-    onSubmit: async values => {
+    onSubmit: async (values) => {
       try {
         await api.renameChannel({ id: modalId, name: values.body });
         toast.success(t('channels.renamed'));
@@ -193,7 +195,7 @@ const modalsType = {
 const Modal = () => {
   const dispatch = useDispatch();
 
-  const { isVisible, type } = useSelector(state => ({
+  const { isVisible, type } = useSelector((state) => ({
     isVisible: state.modal.isVisible,
     type: state.modal.type,
   }));

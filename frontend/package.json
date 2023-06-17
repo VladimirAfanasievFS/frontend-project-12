@@ -29,10 +29,7 @@
     "yup": "^1.2.0"
   },
   "devDependencies": {
-    "eslint-config-prettier": "^8.8.0",
-    "eslint-plugin-functional": "^5.0.8",
-    "eslint-plugin-prettier": "^4.2.1",
-    "prettier": "^2.8.7"
+    "eslint-plugin-functional": "^5.0.8"
   },
   "scripts": {
     "start": "react-scripts start",

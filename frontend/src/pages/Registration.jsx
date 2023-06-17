@@ -34,7 +34,7 @@ const Registration = () => {
         (value, context) => value === context.parent.password,
       ),
     }),
-    onSubmit: async values => {
+    onSubmit: async (values) => {
       // Отправка данных на сервер или другая логика обработки формы
       f.setStatus('valid');
       try {
@@ -106,7 +106,10 @@ const Registration = () => {
                 </Form.Group>
 
                 <Form.Group controlId="confirmPassword" hasValidation>
-                  <Form.Label> {t('signup.confirm')}</Form.Label>
+                  <Form.Label>
+                    {' '}
+                    {t('signup.confirm')}
+                  </Form.Label>
                   <Form.Control
                     type="password"
                     name="confirmPassword"

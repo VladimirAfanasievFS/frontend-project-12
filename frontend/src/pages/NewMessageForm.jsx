@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 import SocketContext from '../contexts/SocketContext';
 
 const NewMessageForm = () => {
-  const { currentChannelId } = useSelector(state => state.channels);
+  const { currentChannelId } = useSelector((state) => state.channels);
   const { t } = useTranslation();
   const validationSchema = yup.object().shape({
     body: yup.string().trim().required('modals.required'),

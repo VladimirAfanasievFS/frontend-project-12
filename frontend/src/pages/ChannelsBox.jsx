@@ -7,7 +7,9 @@ import { showModal } from '../slices/modal';
 import { TYPE } from './Modal';
 import { changeChannel } from '../slices/channels';
 
-const Channel = ({ channel, isCurrent, handleChoose, handleRemove, handleRename }) => {
+const Channel = ({
+  channel, isCurrent, handleChoose, handleRemove, handleRename,
+}) => {
   const variant = isCurrent ? 'primary' : 'light';
   const { t } = useTranslation();
   return (
@@ -49,7 +51,7 @@ const Channel = ({ channel, isCurrent, handleChoose, handleRemove, handleRename 
 };
 
 const ChannelsBox = () => {
-  const { channels, currentChannelId } = useSelector(state => state.channels);
+  const { channels, currentChannelId } = useSelector((state) => state.channels);
 
   const dispatch = useDispatch();
 
@@ -75,7 +77,7 @@ const ChannelsBox = () => {
         id="channels-box"
         className="nav flex-column nav-pills nav-fill px-2 mb-3 overflow-auto h-100 d-block"
       >
-        {channels.map(channel => {
+        {channels.map((channel) => {
           const handleChoose = () => {
             dispatch(changeChannel({ channelId: channel.id }));
           };
