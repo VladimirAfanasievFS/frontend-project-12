@@ -42,7 +42,6 @@ const SocketProvider = ({ children, socket }) => {
 
     const onRemoveChannel = (channel) => {
       dispatch(removeChannel({ channelId: channel.id }));
-      dispatch(changeChannel({ channelId: 1 }));
     };
 
     const onRenameChannel = (channel) => {

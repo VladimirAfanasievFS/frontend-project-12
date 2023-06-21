@@ -4,7 +4,7 @@ import find from 'lodash/find';
 import remove from 'lodash/remove';
 
 const initialState = { channels: [], currentChannelId: null };
-
+const defaultChannelId = 1;
 const channelsSlice = createSlice({
   name: 'channels',
   initialState,
@@ -21,6 +21,9 @@ const channelsSlice = createSlice({
     },
     removeChannel: (state, { payload: { channelId } }) => {
       remove(state.channels, ({ id }) => id === channelId);
+      if (state.currentChannelId === channelId) {
+        state.currentChannelId = defaultChannelId;
+      }
     },
     renameChannel: (state, { payload: { channelId, name } }) => {
       const channel = find(state.channels, ({ id }) => id === channelId);
