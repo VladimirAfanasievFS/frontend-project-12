@@ -3,9 +3,12 @@ import axios from 'axios';
 import Spinner from 'react-bootstrap/Spinner';
 
 import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import ChannelsBox from './ChannelsBox.jsx';
 import ChatBox from './ChatBox.jsx';
-import { dataPath } from '../routes.js';
+import { dataPath, loginPagePath } from '../routes.js';
 import { setInitialState } from '../slices/channels.js';
 import useAuth from '../hooks/useAuth.js';
 
@@ -15,16 +18,31 @@ const ChatPage = () => {
   const [fetching, setFetching] = useState(true);
   const dispatch = useDispatch();
   const { token } = useAuth();
+  const t = useTranslation();
+  const navigate = useNavigate();
+
   useEffect(() => {
     async function fetchData() {
-      const res = await axios.get(dataPath(), { headers: generateAuthHeader(token) });
-      const { channels, currentChannelId, messages } = res.data;
-      dispatch(setInitialState({ channels, currentChannelId, messages }));
-
+      setFetching(true);
+      try {
+        const res = await axios.get(dataPath(), { headers: generateAuthHeader(token) });
+        const { channels, currentChannelId, messages } = res.data;
+        dispatch(setInitialState({ channels, currentChannelId, messages }));
+      } catch (error) {
+        if (!error.isAxiosError) {
+          toast.error(t('errors.unknown'));
+          return;
+        }
+        if (error.response?.status === 401) {
+          navigate(loginPagePath());
+        } else {
+          toast.error(t('errors.network'));
+        }
+      }
       setFetching(false);
     }
     fetchData();
-  }, [dispatch, token]);
+  }, [dispatch, navigate, t, token]);
 
   return fetching ? (
     <div className="h-100 d-flex justify-content-center align-items-center">
