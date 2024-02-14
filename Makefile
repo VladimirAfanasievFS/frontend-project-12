@@ -1,17 +1,20 @@
-lint-frontend:
-	make -C frontend lint
+develop:
+	npx webpack serve
 
 install:
 	npm ci
 
-start-frontend:
-	make -C frontend start
+build:
+	rm -rf dist
+	NODE_ENV=production npx webpack
 
-start-backend:
-	npx start-server
+test:
+	npm test
 
-deploy:
-	git push heroku main
+lint:
+	npx eslint .
 
-start:
-	make start-backend & make start-frontend
+lint-fix:
+	npx eslint --fix .
+
+.PHONY: test
